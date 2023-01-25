@@ -9,3 +9,5 @@
   - game error in `/game/my_error.go`
 
 - `main.go` reads Command Line Input and place stone
+
+- Fix Bugs
