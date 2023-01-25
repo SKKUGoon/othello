@@ -11,6 +11,11 @@ var StoneColorItoA map[int]string = map[int]string{
 	0:  "No stone",
 }
 
+var StoneColorAtoI map[string]int = map[string]int{
+	"White": 1,
+	"Black": -1,
+}
+
 type BoardCoord struct {
 	X int
 	Y int
@@ -39,14 +44,16 @@ type BoardElement struct {
 }
 
 type BoardSpace interface {
-	emptyProxy() ([]*BoardElement, error)
+	nonEmptyProxy() ([]*BoardElement, error)
 	TurnOverCheck(int) ([]*BoardElement, error)
 }
 
-func (e *BoardElement) emptyProxy() ([]*BoardElement, error) {
+func (e *BoardElement) nonEmptyProxy() ([]*BoardElement, error) {
+	// Scan 8 directions for Board element.
+	// If the board element is not empty return in array of *BoardElement
 	myProxy := []*BoardElement{
 		e.E, e.W, e.S, e.N,
-		e.NE, e.SE, e.NW, e.NE,
+		e.NE, e.SE, e.NW, e.SW,
 	}
 	isEmpty := []*BoardElement{}
 	for _, p := range myProxy {

@@ -3,18 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/skkugoon/othelo/game"
 )
-
-var Coloring map[string]int = map[string]int{
-	"White": 1,
-	"Black": -1,
-}
 
 func main() {
 	newBoard := game.Board{}
@@ -23,32 +17,11 @@ func main() {
 	newBoard.Initialize()
 	newBoard.Picture()
 
-	check1 := game.BoardCoord{
-		X: 5,
-		Y: 4,
-	}
-
-	err := newBoard.Move(check1, 1)
-	if err != nil {
-		log.Println(err)
-	}
-	newBoard.Picture()
-
-	check2 := game.BoardCoord{
-		X: 5,
-		Y: 5,
-	}
-	err = newBoard.Move(check2, -1)
-	if err != nil {
-		log.Println(err)
-	}
-	newBoard.Picture()
-
 	iAm := 1
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
-		fmt.Println("Enter X and Y pos of your move:")
+		fmt.Printf("Enter X and Y pos of your move (Current turn %s): \n", game.StoneColorItoA[iAm])
 		scanner.Scan()
 		text := scanner.Text()
 		if len(text) != 0 {
@@ -56,23 +29,23 @@ func main() {
 			move, err := processStdIn(strings.Split(text, " "))
 			if err != nil {
 				fmt.Println(err.Error())
+				newBoard.Picture()
 				continue
 			}
 			err = newBoard.Move(move, iAm)
 			if err != nil {
 				fmt.Println(err.Error())
+				newBoard.Picture()
 				continue
 			}
 			// After Move success, print picture
 			newBoard.Picture()
 			// Next turn
 			iAm = iAm * -1
-
 		} else {
 			// exit if user entered an empty string
 			break
 		}
-
 	}
 }
 

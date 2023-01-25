@@ -69,16 +69,16 @@ func (b *Board) Connect() {
 		west, east := e.Coordinate.X-1, e.Coordinate.X+1
 		south, north := e.Coordinate.Y-1, e.Coordinate.Y+1
 
-		if north < b.MySize {
-			// Set North
-			c = BoardCoord{X: e.Coordinate.X, Y: north}
-			e.N = b.ElemCoord[c]
-		}
-
 		if south >= 0 {
 			// Set South
 			c = BoardCoord{X: e.Coordinate.X, Y: south}
 			e.S = b.ElemCoord[c]
+		}
+
+		if north < b.MySize {
+			// Set North
+			c = BoardCoord{X: e.Coordinate.X, Y: north}
+			e.N = b.ElemCoord[c]
 		}
 
 		if west >= 0 {
@@ -159,9 +159,23 @@ func (b *Board) isLegalLoc(c BoardCoord) error {
 	return nil
 }
 
+func (b *Board) isLegalPlace(c BoardCoord) error {
+	occupied := b.ElemCoord[c].Color == 0
+	if !occupied {
+		return &GameError{Code: "G003", Message: "Illegal placement. Already Occupied"}
+	}
+	return nil
+}
+
 func (b *Board) Move(place BoardCoord, whoseTurn int) error {
-	// Placement check `place`
+	// Before every move check if the move is legal.
+	// Placement check `place` exists
 	if err := b.isLegalLoc(place); err != nil {
+		return err
+	}
+
+	// Placement check `place` occupied
+	if err := b.isLegalPlace(place); err != nil {
 		return err
 	}
 
@@ -182,7 +196,17 @@ func (b *Board) Move(place BoardCoord, whoseTurn int) error {
 		c.Color = whoseTurn
 	}
 
+	// After turn, update board metadata
 	// Game status update
+	switch whoseTurn {
+	case 1:
+		b.Whites += len(candidate) + 1
+		b.Blacks += -len(candidate)
+	case -1:
+		b.Whites += -len(candidate)
+		b.Blacks += len(candidate) + 1
+	}
+
 	b.MyTurn = b.MyTurn * -1
 	b.TotalTurn += 1
 	return nil
@@ -221,7 +245,7 @@ func (b *Board) Picture() {
 		rowX = append(rowX, "X")
 	}
 	fmt.Printf(
-		"        %s\n       %s\n       %s\n",
+		"        %s\n        %s\n        %s\n",
 		strings.Join(rowXNum, " "),
 		strings.Join(rowXEq, " "),
 		strings.Join(rowX, " "),

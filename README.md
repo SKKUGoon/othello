@@ -23,3 +23,23 @@ If you answer like so
 $ 3 5
 ```
 it is equivalent for you placing your stone on coordinate (3, 5)
+
+Game screen look like so;
+```console
+[Game turn 41]
+
+Y > 7 :| | |w|w|w|w|w|w|
+Y > 6 :| | | | |b|w|w|w|
+Y > 5 :| | | |b|b|b|w|w|
+Y > 4 :|b|b|b|b|b|b|w|w|
+Y > 3 :| | | |b|w|w|b|w|
+Y > 2 :| | |b|b|w|w|w|w|
+Y > 1 :| | | |w|w|w|w|w|
+Y > 0 :| | |w|w|w|w|w|w|
+        0 1 2 3 4 5 6 7
+        ^ ^ ^ ^ ^ ^ ^ ^
+        X X X X X X X X
+
+Now Turn: Black
+White: 31, Black: 14
+```
